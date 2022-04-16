@@ -13,3 +13,4 @@ maszynaPusta = True
 client = paho.Client("client-001")
 msgmqtt = ''
 trwaWyjmowanie = False
+czasStart = 0
