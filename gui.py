@@ -4,7 +4,7 @@ import requests
 import os
 import time
 import threading
-from elementyGlobalne import pomin
+import elementyGlobalne
 from silnik import silnik1, silnik2
 import termometr
 import watki
@@ -459,11 +459,10 @@ class Gui(tk.Tk):
         requests.get('http://192.168.1.151/api/dc/twofg/grip_external/0/39/20/10')
 
     def start(self, event=None):
-        global soczewka, watekglowny
-        soczewka = -1
-        watekglowny = threading.Thread(target=watki.glownyWatek)
-        watekglowny.daemon = True
-        watekglowny.start()
+        elementyGlobalne.soczewka = -1
+        watki.watekglowny = threading.Thread(target=watki.glownyWatek)
+        watki.watekglowny.daemon = True
+        watki.watekglowny.start()
 
     def startOd(self, event=None):
         self.show_keypad()
@@ -487,23 +486,20 @@ class Gui(tk.Tk):
         silnik2.jedzDoDolu()
 
     def wyjmowanieSoczewek(self, event=None):
-        global trwaWyjmowanie
-        trwaWyjmowanie = True
+        elementyGlobalne.trwaWyjmowanie = True
         self.opuscZrobione()
         time.sleep(5)
         self.zatrzymajZrobione()
         self.oknoRozladunek.place(x=200, y=300)
 
     def punktKalibracyjny(self, event=None):
-        global client
-        client.publish("cobot/polecenia", "punkt kalibracyjny")
+        elementyGlobalne.client.publish("cobot/polecenia", "punkt kalibracyjny")
 
     def stopProgram(self, event=None):
         os._exit(0)
 
     def show_keypad(self, event=None):
-        global wybranaSoczewka
-        wybranaSoczewka = None
+        elementyGlobalne.wybranaSoczewka = None
         self.keypad.place(x=500, y=100)
 
     def create_keypad(self):
@@ -513,7 +509,7 @@ class Gui(tk.Tk):
         for x in range(8):
             for y in range(11):
                 val = x * 11 + y
-                if val in pomin:
+                if val in elementyGlobalne.pomin:
                     continue
                 b = tk.Button(
                     keypad,
@@ -578,22 +574,19 @@ class Gui(tk.Tk):
         return okno
 
     def potwierdzBranieSoczewki(self, event=None):
-        global wybranaSoczewka, soczewka
-        if wybranaSoczewka is None:
+        if elementyGlobalne.wybranaSoczewka is None:
             return
         self.hide_keypad()
-        soczewka = wybranaSoczewka
-        watekglowny = threading.Thread(target=watki.glownyWatek)
-        watekglowny.daemon = True
-        watekglowny.start()
+        elementyGlobalne.soczewka = elementyGlobalne.wybranaSoczewka
+        watki.watekglowny = threading.Thread(target=watki.glownyWatek)
+        watki.watekglowny.daemon = True
+        watki.watekglowny.start()
 
     def zapiszSoczewke(self, numer, event=None):
-        global wybranaSoczewka
-        wybranaSoczewka = numer
+        elementyGlobalne.wybranaSoczewka = numer
 
     def koniecRozladunku(self, event=None):
-        global trwaWyjmowanie
-        trwaWyjmowanie = False
+        elementyGlobalne.trwaWyjmowanie = False
         self.oknoRozladunek.place_forget()
         self.zmienZrobioneTacki(0)
 
@@ -609,7 +602,6 @@ guiGlowne = Gui()
 
 
 def odswiezOkno():
-    print('e')
     while True:
         guiGlowne.aktualizujOkno()
         time.sleep(1)

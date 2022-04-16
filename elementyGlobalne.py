@@ -12,3 +12,4 @@ ostatniaSoczewka = -1
 maszynaPusta = True
 client = paho.Client("client-001")
 msgmqtt = ''
+trwaWyjmowanie = False

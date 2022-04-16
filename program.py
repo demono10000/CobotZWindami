@@ -29,9 +29,8 @@ czasstart = 0
 
 
 def on_message(client, userdata, message):
-    time.sleep(1)
     elementyGlobalne.msgmqtt = str(message.payload.decode("utf-8"))
-    # print('mqtt',elementyGlobalne.msgmqtt)
+    print('mqtt', elementyGlobalne.msgmqtt)
     if "szerokosc przed" in elementyGlobalne.msgmqtt:
         dane = float(elementyGlobalne.msgmqtt.split(':')[1][:4])
         gui.guiGlowne.labelSzerokoscPrzed['text'] = 'Szerokość przed:\n{}mm'.format(

@@ -3,46 +3,47 @@ import cobot
 import threading
 from silnik import silnik1, silnik2
 import RPi.GPIO as GPIO
+import elementyGlobalne
+import gui
 
 
 def glownyWatek():
-    global soczewka, maszynaPusta, msgmqtt, ostatniaSoczewka, client, trwaWyjmowanie
     while True:
-        if soczewka == 88:
-            client.publish("cobot/polecenia", "czekaj na maszyne")
-            while not msgmqtt == 'koniec obrobki soczewki':
+        if elementyGlobalne.soczewka == 88:
+            elementyGlobalne.client.publish("cobot/polecenia", "czekaj na maszyne")
+            while not elementyGlobalne.msgmqtt == 'koniec obrobki soczewki':
                 time.sleep(0.1)
             cobot.wyjmijSoczewkeZMaszyny()
             cobot.nastepnaSoczewka()
             continue
-        if soczewka > 88:
-            while trwaWyjmowanie:
+        if elementyGlobalne.soczewka > 88:
+            while elementyGlobalne.trwaWyjmowanie:
                 time.sleep(0.1)
             cobot.schowajZrobionaTacke()
             if not cobot.wezNowaTacke():
                 break
             time.sleep(3)
-            soczewka = 0
+            elementyGlobalne.soczewka = 0
             cobot.nastepnaSoczewka()
-        if soczewka == -1:
+        if elementyGlobalne.soczewka == -1:
             if not cobot.wezNowaTacke():
                 break
             time.sleep(3)
-            soczewka = 0
+            elementyGlobalne.soczewka = 0
             cobot.nastepnaSoczewka()
         cobot.wezSoczewke()
         czyMaszynaPusta()
-        ostatniaSoczewka = soczewka
+        elementyGlobalne.ostatniaSoczewka = elementyGlobalne.soczewka
         cobot.nastepnaSoczewka()
-    # lblsoczewka['text'] = 'BŁĄD! Brak tacek'
+    gui.guiGlowne.labelSoczewka['text'] = 'BŁĄD! Brak tacek'
 
 
 def czyMaszynaPusta():
-    if maszynaPusta:
+    if elementyGlobalne.maszynaPusta:
         cobot.wlozSoczewkeZeSlupka()
     else:
-        client.publish("cobot/polecenia", "czekaj na maszyne")
-        while not msgmqtt == 'koniec obrobki soczewki':
+        elementyGlobalne.client.publish("cobot/polecenia", "czekaj na maszyne")
+        while not elementyGlobalne.msgmqtt == 'koniec obrobki soczewki':
             time.sleep(0.1)
         time.sleep(2)
         cobot.wyjmijSoczewkeZMaszyny()
