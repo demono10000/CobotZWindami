@@ -51,7 +51,8 @@ class Gui(tk.Tk):
             text="Numer soczewki: 0",
             font=("Courier", 30),
             width=18,
-            anchor='w')
+            anchor='w'
+        )
         self.labelSoczewka.place(x=0, y=250)
         self.label = tk.Label(
             self,
@@ -504,7 +505,13 @@ class Gui(tk.Tk):
 
     def create_keypad(self):
         keypad = tk.Frame(self)
-        lbl = tk.Label(keypad, text="ROBOT", font=("Courier", 75), width=2, anchor='c')
+        lbl = tk.Label(
+            keypad,
+            text="ROBOT",
+            font=("Courier", 75),
+            width=2,
+            anchor='c'
+        )
         lbl.grid(row=0, column=3, columnspan=5, sticky='news')
         for x in range(8):
             for y in range(11):
