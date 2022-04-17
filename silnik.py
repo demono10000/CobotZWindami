@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import RPi.GPIO as GPIO
+import elementyGlobalne
 
 
 class Silnik:
@@ -59,5 +60,15 @@ class Silnik:
         self.przelacz(False)
 
 
-silnik1 = Silnik(27, 22, 13, 16)
-silnik2 = Silnik(5, 6, 26, 21)
+silnik1 = Silnik(
+    27,
+    22,
+    elementyGlobalne.piny['kraniecSilnik1Gora'],
+    elementyGlobalne.piny['kraniecSilnik1dol']
+)
+silnik2 = Silnik(
+    5,
+    6,
+    elementyGlobalne.piny['kraniecSilnik2Gora'],
+    elementyGlobalne.piny['kraniecSilnik2dol']
+)
