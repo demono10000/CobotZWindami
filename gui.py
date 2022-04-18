@@ -1,5 +1,4 @@
 import tkinter as tk
-import sqlite3
 import requests
 import os
 import time
@@ -8,6 +7,7 @@ import elementyGlobalne
 from silnik import silnik1, silnik2
 import termometr
 import watki
+import database
 
 
 class Gui(tk.Tk):
@@ -193,19 +193,14 @@ class Gui(tk.Tk):
             height=1
         )
         self.button.place(x=0, y=350)
-        conn = sqlite3.connect('data.db')
-        c = conn.cursor()
-        for row in c.execute("SELECT wartosc FROM dane WHERE nazwa='tackiNowe'"):
-            self.labelTackiNowe = tk.Label(
-                self,
-                text=str(row[0]),
-                font=("Courier", 75),
-                width=2,
-                anchor='c'
-            )
-            self.labelTackiNowe.place(x=150, y=350)
-        conn.commit()
-        conn.close()
+        self.labelTackiNowe = tk.Label(
+            self,
+            text=database.odczytajDane('tackiNowe'),
+            font=("Courier", 75),
+            width=2,
+            anchor='c'
+        )
+        self.labelTackiNowe.place(x=150, y=350)
         self.button = tk.Button(
             self,
             text="+",
@@ -236,19 +231,14 @@ class Gui(tk.Tk):
             height=1
         )
         self.button.place(x=0, y=550)
-        conn = sqlite3.connect('data.db')
-        c = conn.cursor()
-        for row in c.execute("SELECT wartosc FROM dane WHERE nazwa='tackiZrobione'"):
-            self.labelTackiZrobione = tk.Label(
-                self,
-                text=str(row[0]),
-                font=("Courier", 75),
-                width=2,
-                anchor='c'
-            )
-            self.labelTackiZrobione.place(x=150, y=550)
-        conn.commit()
-        conn.close()
+        self.labelTackiZrobione = tk.Label(
+            self,
+            text=database.odczytajDane('tackiZrobione'),
+            font=("Courier", 75),
+            width=2,
+            anchor='c'
+        )
+        self.labelTackiZrobione.place(x=150, y=550)
         self.button = tk.Button(
             self,
             text="+",
@@ -424,26 +414,15 @@ class Gui(tk.Tk):
         self.labelSzerokoscPoMin['text'] = 'Po min: {}mm'.format(str(0))
 
     def zmienNoweTacki(self, liczba, event=None):
-        conn = sqlite3.connect('data.db')
-        c = conn.cursor()
-        c.execute("UPDATE dane SET wartosc = wartosc + ? WHERE nazwa = 'tackiNowe'", (liczba,))
-        for row in c.execute("SELECT wartosc FROM dane WHERE nazwa='tackiNowe'"):
-            self.labelTackiNowe['text'] = str(row[0])
-        conn.commit()
-        conn.close()
+        database.dodajDo('tackiNowe', liczba)
+        self.labelTackiNowe['text'] = database.odczytajDane('tackiNowe')
 
     def zmienZrobioneTacki(self, liczba, event=None):
-        conn = sqlite3.connect('data.db')
-        c = conn.cursor()
         if liczba == 0:
-            c.execute("UPDATE dane SET wartosc = 0 WHERE nazwa = 'tackiZrobione'")
+            database.zeruj('tackiZrobione')
         else:
-            c.execute("UPDATE dane SET wartosc = wartosc + ? WHERE nazwa = 'tackiZrobione'",
-                      (liczba,))
-        for row in c.execute("SELECT wartosc FROM dane WHERE nazwa='tackiZrobione'"):
-            self.labelTackiZrobione['text'] = str(row[0])
-        conn.commit()
-        conn.close()
+            database.dodajDo('tackiZrobione', liczba)
+        self.labelTackiZrobione['text'] = database.odczytajDane('tackiZrobione')
 
     def zaladujTacke(self, event=None):
         if silnik1.stan() or silnik2.stan():
