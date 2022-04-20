@@ -9,6 +9,8 @@ import termometr
 import watki
 import database
 
+guiGlowne = None
+
 
 class Gui(tk.Tk):
     pelnyEkran = True
@@ -584,15 +586,15 @@ class Gui(tk.Tk):
             self.labelStan['text'] = 'Nie pracuję'
 
 
-guiGlowne = Gui()
-
-
 def odswiezOkno():
     while True:
         guiGlowne.aktualizujOkno()
         time.sleep(1)
 
 
-twindow = threading.Thread(target=odswiezOkno)
-twindow.daemon = True
-twindow.start()
+def stworzGUI():
+    global guiGlowne
+    guiGlowne = Gui()
+    twindow = threading.Thread(target=odswiezOkno)
+    twindow.daemon = True
+    twindow.start()
