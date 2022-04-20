@@ -62,9 +62,8 @@ def kontrolaSilnikow():
             if silnikk.stan():
                 if silnikk.stanKierunku():
                     if silnikk.stanKraniecDol():
-                        # silnikk.przelacz(False)
-                        # silnikk.przelaczKierunek(False)
-                        pass
+                        silnikk.przelacz(False)
+                        silnikk.przelaczKierunek(False)
                 else:
                     if silnikk.stanKraniecGora():
                         silnikk.przelacz(False)
