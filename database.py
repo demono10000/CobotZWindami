@@ -11,7 +11,6 @@ def db_ops():
     yield c
     conn.commit()
     conn.close()
-    print('db_ops closed')
 
 
 def odczytajDane(nazwa):
@@ -28,3 +27,10 @@ def dodajDo(nazwa, wartosc):
 def zeruj(nazwa):
     with db_ops() as c:
         c.execute("UPDATE dane SET wartosc = 0 WHERE nazwa = ?", (nazwa,))
+
+
+def stworzBaze():
+    with db_ops() as c:
+        c.execute("CREATE TABLE IF NOT EXISTS dane(nazwa text UNIQUE, wartosc integer)")
+        c.execute("INSERT OR IGNORE INTO dane(nazwa, wartosc) VALUES ('tackiNowe', 0)")
+        c.execute("INSERT OR IGNORE INTO dane(nazwa, wartosc) VALUES ('tackiZrobione', 0)")
