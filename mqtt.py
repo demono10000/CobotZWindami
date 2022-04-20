@@ -54,7 +54,8 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("cobot/wiadomosc")
 
 
-elementyGlobalne.client.on_message = on_message
-elementyGlobalne.client.on_connect = on_connect
-elementyGlobalne.client.connect(broker)
-elementyGlobalne.client.loop_start()
+def inicjalizacja():
+    elementyGlobalne.client.on_message = on_message
+    elementyGlobalne.client.on_connect = on_connect
+    elementyGlobalne.client.connect(broker)
+    elementyGlobalne.client.loop_start()
