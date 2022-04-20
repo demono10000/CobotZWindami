@@ -1,30 +1,30 @@
 import sqlite3
+from contextlib import contextmanager
 
 bazadanych = 'data.db'
 
 
-def odczytajDane(nazwa):
-    odpowiedz = ''
+@contextmanager
+def db_ops():
     conn = sqlite3.connect(bazadanych)
     c = conn.cursor()
-    for row in c.execute("SELECT wartosc FROM dane WHERE nazwa=?", (nazwa,)):
-        odpowiedz = str(row[0])
+    yield c
     conn.commit()
     conn.close()
-    return odpowiedz
+    print('db_ops closed')
+
+
+def odczytajDane(nazwa):
+    with db_ops() as c:
+        c.execute("SELECT wartosc FROM dane WHERE nazwa = ?", (nazwa,))
+        return c.fetchone()
 
 
 def dodajDo(nazwa, wartosc):
-    conn = sqlite3.connect(bazadanych)
-    c = conn.cursor()
-    c.execute("UPDATE dane SET wartosc = wartosc + ? WHERE nazwa = ?", (wartosc, nazwa))
-    conn.commit()
-    conn.close()
+    with db_ops() as c:
+        c.execute("UPDATE dane SET wartosc = wartosc + ? WHERE nazwa = ?", (wartosc, nazwa))
 
 
 def zeruj(nazwa):
-    conn = sqlite3.connect(bazadanych)
-    c = conn.cursor()
-    c.execute("UPDATE dane SET wartosc = 0 WHERE nazwa = ?", (nazwa,))
-    conn.commit()
-    conn.close()
+    with db_ops() as c:
+        c.execute("UPDATE dane SET wartosc = 0 WHERE nazwa = ?", (nazwa,))
