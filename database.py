@@ -16,7 +16,7 @@ def db_ops():
 def odczytajDane(nazwa):
     with db_ops() as c:
         c.execute("SELECT wartosc FROM dane WHERE nazwa = ?", (nazwa,))
-        return c.fetchone()
+        return c.fetchone()[0]
 
 
 def dodajDo(nazwa, wartosc):
