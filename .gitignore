@@ -1,4 +1,4 @@
 /RPi
 gpiozero.py
 data.db
-/__pycache__
+**/__pycache__
