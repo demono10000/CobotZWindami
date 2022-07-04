@@ -5,6 +5,7 @@ from silnik import silnik1, silnik2
 import RPi.GPIO as GPIO
 import elementyGlobalne
 import gui
+import pad
 
 
 def glownyWatek():
@@ -80,3 +81,7 @@ tsilniki.start()
 
 watekglowny = threading.Thread(target=glownyWatek)
 watekglowny.daemon = True
+
+tpad = threading.Thread(target=pad.padController)
+tpad.daemon = True
+tpad.start()
