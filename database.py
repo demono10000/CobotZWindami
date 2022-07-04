@@ -1,7 +1,10 @@
 import sqlite3
 from contextlib import contextmanager
+import os
 
-bazadanych = 'data.db'
+
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+bazadanych = os.path.join(BASE_DIR, "data.db")
 
 
 @contextmanager
