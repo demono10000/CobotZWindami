@@ -1,12 +1,12 @@
 #! /usr/bin/env python
+import piny
 import database
 import mqtt
 import gui
-import piny
 
 
 def main():
-    piny.ustawPiny()
+    piny
     database.stworzBaze()
     mqtt.inicjalizacja()
     gui.stworzGUI()

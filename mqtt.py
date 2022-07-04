@@ -2,8 +2,8 @@ import elementyGlobalne
 import gui
 import time
 
-broker = "192.168.188.149"
-# broker="127.0.0.1"
+# broker = "192.168.188.149"
+broker = "127.0.0.1"
 
 
 def on_message(client, userdata, message):

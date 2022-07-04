@@ -11,10 +11,10 @@ class Silnik:
         self.pinKierunek = pinKierunek
         self.kraniecGora = kraniecGora
         self.kraniecDol = kraniecDol
-        self.przelacz(False)
-        self.przelaczKierunek(False)
         GPIO.setup(pinStan, GPIO.OUT)
         GPIO.setup(pinKierunek, GPIO.OUT)
+        self.przelacz(False)
+        self.przelaczKierunek(False)
 
     # True - wlacz
     def przelacz(self, stan):

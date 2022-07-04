@@ -10,3 +10,6 @@ def ustawPiny():
     GPIO.setup(elementyGlobalne.piny['kraniecSilnik2Gora'], GPIO.IN, GPIO.PUD_UP)
     GPIO.setup(elementyGlobalne.piny['kraniecSilnik2dol'], GPIO.IN, GPIO.PUD_UP)
     GPIO.setup(elementyGlobalne.piny['wykrytoKolizje'], GPIO.IN, GPIO.PUD_UP)
+
+
+ustawPiny()
