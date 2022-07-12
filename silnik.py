@@ -30,13 +30,13 @@ class Silnik:
     # True - do dolu
     def przelaczKierunek(self, stan):
         if stan:
-            GPIO.output(self.pinKierunek, GPIO.LOW)
-        else:
             GPIO.output(self.pinKierunek, GPIO.HIGH)
+        else:
+            GPIO.output(self.pinKierunek, GPIO.LOW)
 
     # True - do dolu
     def stanKierunku(self):
-        return not GPIO.input(self.pinKierunek)
+        return GPIO.input(self.pinKierunek)
 
     # True - wcisniety
     def stanKraniecGora(self):
