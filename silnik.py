@@ -60,12 +60,15 @@ class Silnik:
         self.przelacz(False)
 
 
+# do zrobienia
 silnik1 = Silnik(
     27,
     22,
     elementyGlobalne.piny['kraniecSilnik1Gora'],
     elementyGlobalne.piny['kraniecSilnik1dol']
 )
+
+# zrobione
 silnik2 = Silnik(
     5,
     6,

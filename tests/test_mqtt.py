@@ -1,7 +1,11 @@
+import piny
 import elementyGlobalne
 import mqtt
 import random
 import time
+
+
+piny
 
 
 def test_odbiorDanych():
