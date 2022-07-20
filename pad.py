@@ -1,5 +1,8 @@
+import time
 from inputs import get_gamepad
 from silnik import silnik1, silnik2
+import elektromagnes
+import cobot
 
 
 def padController():
@@ -24,3 +27,15 @@ def padController():
                     silnik1.jedzDoDolu()
                 else:
                     silnik1.stop()
+            elif(event.code == "BTN_EAST"):
+                if(event.state == 1):
+                    elektromagnes.przelaczElektromagnesy(True)
+                else:
+                    elektromagnes.przelaczElektromagnesy(False)
+            elif(event.code == "BTN_NORTH"):
+                if(event.state == 1):
+                    cobot.wezNowaTacke()
+            elif(event.code == "BTN_TL"):
+                if(event.state == 1):
+                    cobot.schowajZrobionaTacke()
+        time.sleep(0.01)
