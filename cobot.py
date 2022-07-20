@@ -34,27 +34,12 @@ def poprzedniaSoczewka(numer):
 
 
 def schowajZrobionaTacke():
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
-    zrobioneTacki = 0
-    for row in c.execute("SELECT wartosc FROM dane WHERE nazwa='tackiZrobione'"):
-        zrobioneTacki = int(row[0])
-    conn.commit()
-    conn.close()
-    if zrobioneTacki == 0:
-        elementyGlobalne.client.publish("cobot/polecenia", "jedz nad zrobione")
-        while not elementyGlobalne.msgmqtt == 'jestem na miejscu':
-            time.sleep(0.1)
-        silnik.silnik2.jedzDoGory()
-        while silnik.silnik2.stan():
-            time.sleep(0.1)
-    else:
-        silnik.silnik2.jedzDoGory()
-        time.sleep(1.75)
-        silnik.silnik2.stop()
+    silnik.silnik2.jedzDoGoryDoCzujnikaIR()
+    while silnik.silnik2.stan():
+        time.sleep(0.1)
     elektromagnes.przelaczElektromagnesy(True)
     silnik.silnik2.jedzDoDolu()
-    time.sleep(8)
+    time.sleep(3)
     silnik.silnik2.stop()
     elektromagnes.przelaczElektromagnesy(False)
     gui.guiGlowne.zmienZrobioneTacki(1)
@@ -96,25 +81,22 @@ def wezNowaTacke():
     conn.close()
     if tackiNowe < 1:
         return False
-    elementyGlobalne.client.publish("cobot/polecenia", "wez nowa tacke")
-    while not elementyGlobalne.msgmqtt == 'podaj tacke':
-        time.sleep(0.1)
-    silnik.silnik1.jedzDoGory()
+    silnik.silnik1.jedzDoGoryDoCzujnikaIR()
     while silnik.silnik1.stan():
         time.sleep(0.1)
     if silnik.silnik1.stanKraniecGora():
         return False
     gui.guiGlowne.zmienNoweTacki(-1)
     elementyGlobalne.client.publish("cobot/polecenia", "tacka podana")
-    while not elementyGlobalne.msgmqtt == 'podnies tacki':
-        time.sleep(0.1)
-    silnik.silnik2.jedzDoGory()
+    # cobot teraz bierze tacke i kładzie ją na elektromagnesach
+    input("Tacka polozona na elektromagnesach? (wcisnij enter)")
+    if silnik.silnik1.stanIR():
+        print("Tacka nie zostala zabrana")
+        return False
+    silnik.silnik2.jedzDoGoryDoCzujnikaIR()
     while silnik.silnik2.stan():
         time.sleep(0.1)
-    elementyGlobalne.client.publish("cobot/polecenia", "tacki podniesione")
-    while not elementyGlobalne.msgmqtt == 'tacka oddana':
-        time.sleep(0.1)
     silnik.silnik2.jedzDoDolu()
-    time.sleep(1)
+    time.sleep(0.5)
     silnik.silnik2.stop()
     return True

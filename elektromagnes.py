@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 
-pin = 17
+pin = 12
 
 GPIO.setup(pin, GPIO.OUT)  # elektrozamki
 
