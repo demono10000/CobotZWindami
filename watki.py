@@ -2,7 +2,6 @@ import time
 import cobot
 import threading
 from silnik import silnik1, silnik2
-import RPi.GPIO as GPIO
 import elementyGlobalne
 import gui
 import pad
@@ -52,11 +51,6 @@ def czyMaszynaPusta():
         cobot.wlozSoczewkeZeSlupka()
 
 
-# True - kolizja
-def kolizjaWykryta():
-    return not GPIO.input(18)
-
-
 def kontrolaSilnikow():
     while True:
         silniki = [silnik1, silnik2]
@@ -66,13 +60,11 @@ def kontrolaSilnikow():
                     if silnikk.stanKraniecDol() and silnikk.kraniecDolWczesniej:
                         silnikk.przelacz(False)
                         silnikk.przelaczKierunek(False)
-                        # print("kraniec dol")
                     silnikk.kraniecDolWczesniej = silnikk.stanKraniecDol()
                 else:
                     if silnikk.stanKraniecGora() and silnikk.kraniecGoraWczesniej:
                         silnikk.przelacz(False)
                         silnikk.przelaczKierunek(True)
-                        # print("kraniec gora")
                     silnikk.kraniecGoraWczesniej = silnikk.stanKraniecGora()
         time.sleep(0.005)
 
@@ -87,35 +79,24 @@ zatrzymaj = False
 ostatniWysokiSygnal = time.time()
 
 
-def enkoderSilnik1(channel):
+def enkoder(channel):
     global zatrzymaj, pozycjaDocelowa, ostatniWysokiSygnal
+    silnik = None
+    if channel.pin.number == elementyGlobalne.piny['enkoder1']:
+        silnik = silnik1
+    elif channel.pin.number == elementyGlobalne.piny['enkoder2']:
+        silnik = silnik2
     if time.time() - ostatniWysokiSygnal < 0.0023:
         return
-    if silnik1.stanKierunku():
-        silnik1.pozycja += 1
-        if silnik1.pozycja >= pozycjaDocelowa and zatrzymaj:
-            silnik1.stop()
+    if silnik.stanKierunku():
+        silnik.pozycja += 1
+        if silnik.pozycja >= pozycjaDocelowa and zatrzymaj:
+            silnik.stop()
             zatrzymaj = False
     else:
-        silnik1.pozycja -= 1
-        if silnik1.pozycja <= pozycjaDocelowa and zatrzymaj:
-            silnik1.stop()
-            zatrzymaj = False
-
-
-def enkoderSilnik2(channel):
-    global zatrzymaj, pozycjaDocelowa, ostatniWysokiSygnal
-    if time.time() - ostatniWysokiSygnal < 0.0023:
-        return
-    if silnik2.stanKierunku():
-        silnik2.pozycja += 1
-        if silnik2.pozycja >= pozycjaDocelowa and zatrzymaj:
-            silnik2.stop()
-            zatrzymaj = False
-    else:
-        silnik2.pozycja -= 1
-        if silnik2.pozycja <= pozycjaDocelowa and zatrzymaj:
-            silnik2.stop()
+        silnik.pozycja -= 1
+        if silnik.pozycja <= pozycjaDocelowa and zatrzymaj:
+            silnik.stop()
             zatrzymaj = False
 
 
@@ -124,12 +105,12 @@ def filtrSygnalu():
     ostatniWysokiSygnal = time.time()
 
 
-sensor1 = DigitalInputDevice(20, pull_up=True)
-sensor1.when_activated = enkoderSilnik1
+sensor1 = DigitalInputDevice(elementyGlobalne.piny['enkoder1'], pull_up=True)
+sensor1.when_activated = enkoder
 sensor1.when_deactivated = filtrSygnalu
 
-sensor2 = DigitalInputDevice(23, pull_up=True)
-sensor2.when_activated = enkoderSilnik2
+sensor2 = DigitalInputDevice(elementyGlobalne.piny['enkoder2'], pull_up=True)
+sensor2.when_activated = enkoder
 sensor2.when_deactivated = filtrSygnalu
 
 
@@ -164,20 +145,6 @@ def silnik2DoGory(dystans):
     zatrzymaj = True
     silnik2.jedzDoGory()
 
-
-def czujnikTackiNowe():
-    silnik1.stop()
-
-
-def czujnikTackiZrobione():
-    silnik2.stop()
-
-
-# ir1 = DigitalInputDevice(24, pull_up=True)
-# ir1.when_activated = czujnikTackiNowe
-
-# ir2 = DigitalInputDevice(25, pull_up=True)
-# ir2.when_activated = czujnikTackiZrobione
 
 watekglowny = threading.Thread(target=glownyWatek)
 watekglowny.daemon = True
