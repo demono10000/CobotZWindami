@@ -1,9 +1,9 @@
 import time
-import sqlite3
 import elektromagnes
 import elementyGlobalne
 import gui
 import silnik
+import database
 
 
 def wyjmijSoczewkeZMaszyny():
@@ -72,14 +72,11 @@ def wlozSoczewkeZeSlupka():
 
 
 def wezNowaTacke():
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
-    tackiNowe = 0
-    for row in c.execute("SELECT wartosc FROM dane WHERE nazwa='tackiNowe'"):
-        tackiNowe = int(row[0])
-    conn.commit()
-    conn.close()
+    tackiNowe = database.odczytajDame('tackiNowe')
     if tackiNowe < 1:
+        return False
+    if silnik.silnik1.stanIR():
+        print("Wykryto niezaladowana tacke")
         return False
     silnik.silnik1.jedzDoGoryDoCzujnikaIR()
     while silnik.silnik1.stan():
