@@ -1,21 +1,19 @@
 #! /usr/bin/env python
 import RPi.GPIO as GPIO
 import elementyGlobalne
-from enkoder import Enkoder
 from gpiozero import DigitalInputDevice
 
 
 class Silnik:
     przesun = False
 
-    def __init__(self, pinStan, pinKierunek, kraniecGora, kraniecDol, enkoder, pinIR):
+    def __init__(self, pinStan, pinKierunek, kraniecGora, kraniecDol, pinIR):
         self.pinStan = pinStan
         self.pinKierunek = pinKierunek
         self.kraniecGora = kraniecGora
         self.kraniecGoraWczesniej = False
         self.kraniecDol = kraniecDol
         self.kraniecDolWczesniej = False
-        self.enkoder = enkoder
         self.pinIR = pinIR
         self.czujnikIR = DigitalInputDevice(pinIR, pull_up=True)
         self.czujnikIR.when_activated = self.IRwykryty
@@ -84,22 +82,20 @@ class Silnik:
             self.zatrzymajNaIR = False
 
 
-# do zrobienia
+# do zrobienia tacki
 silnik1 = Silnik(
-    27,
-    22,
+    elementyGlobalne.piny['silnik1stan'],
+    elementyGlobalne.piny['silnik1kierunek'],
     elementyGlobalne.piny['kraniecSilnik1Gora'],
     elementyGlobalne.piny['kraniecSilnik1dol'],
-    Enkoder(23),
     24
 )
 
-# zrobione
+# zrobione tacki
 silnik2 = Silnik(
-    5,
-    6,
+    elementyGlobalne.piny['silnik2stan'],
+    elementyGlobalne.piny['silnik2kierunek'],
     elementyGlobalne.piny['kraniecSilnik2Gora'],
     elementyGlobalne.piny['kraniecSilnik2dol'],
-    Enkoder(24),
     25
 )
