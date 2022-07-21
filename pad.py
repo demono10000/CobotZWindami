@@ -2,7 +2,7 @@ import time
 from inputs import get_gamepad
 from silnik import silnik1, silnik2
 import elektromagnes
-import cobot
+# import cobot
 
 
 def padController():
@@ -11,31 +11,24 @@ def padController():
         for event in events:
             # print(event.code, event.state)
             if(event.code == "ABS_HAT0Y"):
-                if(event.state == -1):
-                    silnik2.jedzDoGory()
-                elif(event.state == 1):
-                    silnik2.jedzDoDolu()
-                else:
-                    silnik2.stop()
+                ruszSilnik(silnik2, event.state)
             elif(event.code == "BTN_WEST"):
-                if(event.state == 1):
-                    silnik1.jedzDoGory()
-                else:
-                    silnik1.stop()
+                ruszSilnik(silnik1, -event.state)
             elif(event.code == "BTN_SOUTH"):
-                if(event.state == 1):
-                    silnik1.jedzDoDolu()
-                else:
-                    silnik1.stop()
+                ruszSilnik(silnik1, event.state)
             elif(event.code == "BTN_EAST"):
-                if(event.state == 1):
-                    elektromagnes.przelaczElektromagnesy(True)
-                else:
-                    elektromagnes.przelaczElektromagnesy(False)
-            elif(event.code == "BTN_NORTH"):
-                if(event.state == 1):
-                    cobot.wezNowaTacke()
-            elif(event.code == "BTN_TL"):
-                if(event.state == 1):
-                    cobot.schowajZrobionaTacke()
+                elektromagnes.przelaczElektromagnesy(event.state)
+            """ elif(event.code == "BTN_NORTH" and event.state == 1):
+                cobot.wezNowaTacke()
+            elif(event.code == "BTN_TL" and event.state == 1):
+                cobot.schowajZrobionaTacke() """
         time.sleep(0.01)
+
+
+def ruszSilnik(silnik, wartosc):
+    if wartosc == -1:
+        silnik.jedzDoGory()
+    elif wartosc == 1:
+        silnik.jedzDoDolu()
+    else:
+        silnik.stop()
