@@ -59,8 +59,6 @@ def wezSoczewke():
         if elementyGlobalne.soczewka < 87:
             wezSoczewke()
         return
-    while not elementyGlobalne.msgmqtt == 'soczewka odlozona':
-        time.sleep(0.1)
     elementyGlobalne.msgmqtt = ''
 
 
@@ -69,6 +67,18 @@ def wlozSoczewkeZeSlupka():
     while not elementyGlobalne.msgmqtt == 'soczewka wlozona':
         time.sleep(0.1)
     elementyGlobalne.maszynaPusta = False
+
+
+def wlozSoczewke():
+    elementyGlobalne.client.publish(
+        "cobot/polecenia",
+        "wloz do maszyny:" + str(elementyGlobalne.ostatniaSoczewka)
+    )
+    while not elementyGlobalne.msgmqtt == 'soczewka wyjeta':
+        time.sleep(0.1)
+    gui.guiGlowne.zrobioneSoczewki += 1
+    gui.guiGlowne.labelZrobioneSoczewki['text'] = "Zrobione soczewki:\n" + str(
+        gui.guiGlowne.zrobioneSoczewki)
 
 
 def wezNowaTacke():
