@@ -33,8 +33,10 @@ def glownyWatek():
             elementyGlobalne.soczewka = 0
             cobot.nastepnaSoczewka()
         cobot.wezSoczewke()
-        czyMaszynaPusta()
         elementyGlobalne.ostatniaSoczewka = elementyGlobalne.soczewka
+        # czyMaszynaPusta()
+        input("sygnał do zamiany soczewki")
+        cobot.wlozSoczewke()
         cobot.nastepnaSoczewka()
     gui.guiGlowne.labelSoczewka['text'] = 'BŁĄD! Brak tacek'
 
