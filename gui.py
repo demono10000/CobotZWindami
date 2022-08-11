@@ -24,8 +24,6 @@ class Gui(tk.Tk):
 
     def __init__(self):
         super().__init__()
-        self.keypad = self.create_keypad()
-        self.oknoRozladunek = self.create_rozladunek()
         self.title("Program do maszyny podającej soczewki wykonanej przez Pawła Sołtysa")
         self.geometry("1920x1080")
         self.bind("<F11>", self.toggle_fullscreen)
@@ -393,6 +391,8 @@ class Gui(tk.Tk):
             height=1
         )
         self.button.place(x=800, y=1000)
+        self.keypad = self.create_keypad()
+        self.oknoRozladunek = self.create_rozladunek()
 
     def toggle_fullscreen(self, event=None):
         self.pelnyEkran = not self.pelnyEkran
@@ -435,10 +435,11 @@ class Gui(tk.Tk):
         else:
             time.sleep(2.6)
         silnik1.stop()
-        self.dodajNowaTacke()
+        self.zmienNoweTacki(1)
 
     def otworzChwytak(self, event=None):
-        requests.get('http://192.168.1.151/api/dc/twofg/grip_external/0/39/20/10')
+        # requests.get('http://192.168.1.151/api/dc/twofg/grip_external/0/39/20/10')
+        pass
 
     def start(self, event=None):
         elementyGlobalne.soczewka = -1
@@ -495,17 +496,21 @@ class Gui(tk.Tk):
         )
         lbl.grid(row=0, column=3, columnspan=5, sticky='news')
         for x in range(8):
+            keypad.grid_rowconfigure(index=x+1, minsize=75)
             for y in range(11):
+                keypad.grid_columnconfigure(index=y, minsize=75)
                 val = x * 11 + y
                 if val in elementyGlobalne.pomin:
                     continue
                 b = tk.Button(
                     keypad,
-                    text='⭕',
+                    text=' ◯ ',
                     command=lambda numer=val: self.zapiszSoczewke(numer),
                     font=("Courier", 35),
                     bg='white',
-                    activebackground='gray'
+                    activebackground='gray',
+                    width=1,
+                    height=1
                 )
                 b.grid(row=x + 1, column=y, sticky='news')
         lbl = tk.Label(
