@@ -1,5 +1,4 @@
 import tkinter as tk
-import requests
 import os
 import time
 import threading
@@ -496,7 +495,7 @@ class Gui(tk.Tk):
         )
         lbl.grid(row=0, column=3, columnspan=5, sticky='news')
         for x in range(8):
-            keypad.grid_rowconfigure(index=x+1, minsize=75)
+            keypad.grid_rowconfigure(index=x + 1, minsize=75)
             for y in range(11):
                 keypad.grid_columnconfigure(index=y, minsize=75)
                 val = x * 11 + y
