@@ -72,7 +72,7 @@ def wlozSoczewkeZeSlupka():
 
 
 def wezNowaTacke():
-    tackiNowe = database.odczytajDame('tackiNowe')
+    tackiNowe = database.odczytajDane('tackiNowe')
     if tackiNowe < 1:
         return False
     if silnik.silnik1.stanIR():
@@ -86,7 +86,9 @@ def wezNowaTacke():
     gui.guiGlowne.zmienNoweTacki(-1)
     elementyGlobalne.client.publish("cobot/polecenia", "tacka podana")
     # cobot teraz bierze tacke i kładzie ją na elektromagnesach
-    input("Tacka polozona na elektromagnesach? (wcisnij enter)")
+    while not elementyGlobalne.msgmqtt == 'tacka oddana':
+        time.sleep(0.1)
+    elementyGlobalne.msgmqtt = ''
     if silnik.silnik1.stanIR():
         print("Tacka nie zostala zabrana")
         return False
