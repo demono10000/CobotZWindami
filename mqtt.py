@@ -40,7 +40,7 @@ def on_message(client, userdata, message):
             gui.guiGlowne.labelSzerokoscPoMin['text'] = 'Po min: {}mm'.format(
                 str(dane))
     if elementyGlobalne.msgmqtt == 'czas start':
-        if elementyGlobalne.czasSstart > 0:
+        if elementyGlobalne.czasStart > 0:
             gui.guiGlowne.labelCzasStartStart['text'] = "Czas cyklu:\n{}s".format(
                 int(time.time() - elementyGlobalne.czasStart))
         elementyGlobalne.czasStart = time.time()
