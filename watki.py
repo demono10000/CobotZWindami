@@ -10,6 +10,7 @@ from gpiozero import DigitalInputDevice
 
 def glownyWatek():
     while True:
+        '''
         if elementyGlobalne.soczewka == 88:
             elementyGlobalne.client.publish("cobot/polecenia", "czekaj na maszyne")
             while not elementyGlobalne.msgmqtt == 'koniec obrobki soczewki':
@@ -17,7 +18,8 @@ def glownyWatek():
             cobot.wyjmijSoczewkeZMaszyny()
             cobot.nastepnaSoczewka()
             continue
-        if elementyGlobalne.soczewka > 88:
+        '''
+        if elementyGlobalne.soczewka >= 88:
             while elementyGlobalne.trwaWyjmowanie:
                 time.sleep(0.1)
             cobot.schowajZrobionaTacke()
@@ -35,7 +37,7 @@ def glownyWatek():
         cobot.wezSoczewke()
         elementyGlobalne.ostatniaSoczewka = elementyGlobalne.soczewka
         # czyMaszynaPusta()
-        input("sygnał do zamiany soczewki")
+        # input("sygnał do zamiany soczewki")
         cobot.wlozSoczewke()
         cobot.nastepnaSoczewka()
     gui.guiGlowne.labelSoczewka['text'] = 'BŁĄD! Brak tacek'
