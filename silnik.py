@@ -2,6 +2,7 @@
 import RPi.GPIO as GPIO
 import elementyGlobalne
 from gpiozero import DigitalInputDevice
+from time import time
 
 
 class Silnik:
@@ -17,8 +18,10 @@ class Silnik:
         self.pinIR = pinIR
         self.czujnikIR = DigitalInputDevice(pinIR, pull_up=True)
         self.czujnikIR.when_activated = self.IRwykryty
+        self.czujnikIR.when_deactivated = self.IRoff
         self.pozycja = 0
         self.zatrzymajNaIR = False
+        self.zatrzymajNaIRoff = False
         GPIO.setup(pinStan, GPIO.OUT)
         GPIO.setup(pinKierunek, GPIO.OUT)
         self.przelacz(False)
@@ -72,14 +75,24 @@ class Silnik:
         self.jedzDoGory()
         self.zatrzymajNaIR = True
 
+    def jedzDoDoluDoCzujnikaIR(self):
+        self.jedzDoDolu()
+        self.zatrzymajNaIRoff = True
+
     def stop(self):
         self.przelacz(False)
         # print(self.pozycja)
 
     def IRwykryty(self):
+        print('ir wykryty', self.pinIR, time())
         if self.zatrzymajNaIR:
             self.stop()
             self.zatrzymajNaIR = False
+
+    def IRoff(self):
+        if self.zatrzymajNaIRoff:
+            self.stop()
+            self.zatrzymajNaIRoff = False
 
 
 # do zrobienia tacki
@@ -97,5 +110,5 @@ silnik2 = Silnik(
     elementyGlobalne.piny['silnik2kierunek'],
     elementyGlobalne.piny['kraniecSilnik2Gora'],
     elementyGlobalne.piny['kraniecSilnik2dol'],
-    25
+    17
 )
