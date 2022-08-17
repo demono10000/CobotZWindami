@@ -26,6 +26,7 @@ class Gui(tk.Tk):
         self.title("Program do maszyny podającej soczewki wykonanej przez Pawła Sołtysa")
         self.geometry("1920x1080")
         self.bind("<F11>", self.toggle_fullscreen)
+        self.attributes("-fullscreen", self.pelnyEkran)
         self.button = tk.Button(
             self,
             text="PEŁNY EKRAN",
@@ -428,12 +429,16 @@ class Gui(tk.Tk):
     def zaladujTacke(self, event=None):
         if silnik1.stan() or silnik2.stan():
             return
+        if silnik1.stanIR():
+            silnik1.jedzDoDoluDoCzujnikaIR()
+        '''
         silnik1.jedzDoDolu()
         if silnik1.stanKraniecGora():
             time.sleep(2.6 + 2)
         else:
             time.sleep(2.6)
         silnik1.stop()
+        '''
         self.zmienNoweTacki(1)
 
     def otworzChwytak(self, event=None):

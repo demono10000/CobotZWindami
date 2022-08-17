@@ -102,9 +102,11 @@ def wezNowaTacke():
     if silnik.silnik1.stanIR():
         print("Tacka nie zostala zabrana")
         return False
+    print('stan przed', silnik.silnik2.stanIR())
     silnik.silnik2.jedzDoGoryDoCzujnikaIR()
     while silnik.silnik2.stan():
         time.sleep(0.1)
+    print('stan po', silnik.silnik2.stanIR())
     silnik.silnik2.jedzDoDolu()
     time.sleep(0.5)
     silnik.silnik2.stop()
