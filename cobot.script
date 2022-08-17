@@ -17,7 +17,7 @@ var SERIAL_OPTS = {
    parity: 'none'
 };
 // GPIO
-setGeneralDigitalOutput(0, 1);
+setGeneralDigitalOutput(0, 0);
 setGeneralDigitalOutput(1, 0);
 setGeneralDigitalOutput(2, 0);
 // MQTT + RS485
@@ -178,7 +178,7 @@ function wezSoczewkeZTacki(numer){
 	}
 	moveJoint(poczatkowa, 100, 50);
 	var pozycjaSoczewki = Util.deepCopy(tackiDoZabraniaConst);
-	UstawPozycje(1000);
+	UstawPozycje(800);
 	pozycjaSoczewki.z = 30;
 	pozycjaSoczewki.y += 472;
 	pozycjaSoczewki.y += 35*5;
@@ -194,9 +194,10 @@ function wezSoczewkeZTacki(numer){
 	UstawMoc(20);
     UstawPozycje(0);
 	var szerokosc = Odczytajpozycje()/20;
-    message(szerokosc);
+    message("szer: " + szerokosc);
+    if(szerokosc>2 && szerokosc<4) szerokosc *= 10;
 	if(szerokosc<23){
-		UstawPozycje(1000);
+		UstawPozycje(800);
 		pozycjaSoczewki.z = 30;
 		jedzLiniowoDo(pozycjaSoczewki, predkoscDomyslna, przyspieszenieDomyslne);
 		mqttPublish(BROKER_INFO.NAME, 'cobot/wiadomosc', 'nie wykryto soczewki', 1);
@@ -209,10 +210,7 @@ function wezSoczewkeZTacki(numer){
 }
 // włóż soczewkę do maszyny
 function wlozDoMaszynyIWyjmij(numer){
-    message('czekam na sygnal wysoki');
-    message(getGeneralDigitalInput(0));
     wait(getGeneralDigitalInput(0) == 1);
-    message("czekam na sygnal niski");
     wait(getGeneralDigitalInput(0) == 0);
 	var pozycja = Util.deepCopy(centrowkaDaj);
 	pozycja.z += 40;
@@ -243,7 +241,7 @@ function odlozNaTacke(numer){
 	jedzLiniowoDo(pozycjaSoczewki, predkoscDomyslna, przyspieszenieDomyslne);
 	pozycjaSoczewki.z = -10;
 	jedzLiniowoDo(pozycjaSoczewki, predkoscDomyslna, przyspieszenieDomyslne);
-	UstawPozycje(1000);
+	UstawPozycje(800);
 	pozycjaSoczewki.z = 100;
 	jedzLiniowoDo(pozycjaSoczewki, predkoscDomyslna, przyspieszenieDomyslne);
 	mqttPublish(BROKER_INFO.NAME, 'cobot/wiadomosc', 'soczewka wyjeta', 1);
@@ -261,10 +259,10 @@ function wyjmijZMaszyny(numer){
         pozycja.z -= 40;
         moveLinear('tcp', pozycja, predkoscDomyslna, przyspieszenieDomyslne);
         UstawPozycje(1000)
-        pozycja.z -= 3;
+        pozycja.z -= 5;
         moveLinear('tcp', pozycja, predkoscDomyslna, przyspieszenieDomyslne);
         UstawPozycje(0);
-        pozycja.z += 42;
+        pozycja.z += 45;
         moveLinear('tcp', pozycja, predkoscDomyslna, przyspieszenieDomyslne);
         // sleep(100);
     }while(!(CzyTrzymaObiekt() && Odczytajpozycje()/20>15) && ++licznik<3);
@@ -281,7 +279,6 @@ if(CzyZinicjalizowany() == 0) Inicjalizacja();
 // pętla główna
 while(true){
     if(msg=='tacka podana'){
-		message(msg);
         wezNowaTacke();
         msg = '';
 	}else if(msg.includes('wez soczewke')){
