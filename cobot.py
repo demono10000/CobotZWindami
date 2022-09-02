@@ -38,6 +38,7 @@ def schowajZrobionaTacke():
     while silnik.silnik2.stan():
         time.sleep(0.1)
     elektromagnes.przelaczElektromagnesy(True)
+    time.sleep(1)
     silnik.silnik2.jedzDoDolu()
     time.sleep(3)
     silnik.silnik2.stop()
